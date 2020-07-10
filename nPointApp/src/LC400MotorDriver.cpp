@@ -21,6 +21,7 @@ August, 2019
 #endif
 #include <sstream>
 #include <map>
+#include <algorithm>
 
 #include <iocsh.h>
 #include <epicsThread.h>
@@ -279,18 +280,20 @@ asynStatus LC400Controller::readSingle(epicsUInt32 addr, epicsInt32 *val)
 {
   asynStatus status = asynSuccess;
 
-  struct __attribute__((__packed__))outData{
+
+  struct outData {
       unsigned char cmd;
       epicsUInt32 offset;
       unsigned char eos;
-  };
+  } __attribute__((__packed__));
 
-  struct __attribute__((__packed__))inData{
+
+  struct inData {
       unsigned char cmd;
       epicsUInt32 offset;
       epicsInt32 response;
       unsigned char eos;
-  };
+  } __attribute__((__packed__));
 
   struct outData out;
   out.cmd=0xA0;
@@ -515,7 +518,7 @@ asynStatus LC400Controller::writeInt32(asynUser *pasynUser, epicsInt32 value)
   epicsInt32 function = pasynUser->reason;
   asynStatus status = asynSuccess;
   LC400Axis *pAxis = getAxis(pasynUser);
-  static const char *functionName = "writeInt32";
+  //static const char *functionName = "writeInt32";
 
   epicsUInt32 address = getBaseAddress(pAxis->axisNo_);
   
@@ -542,16 +545,7 @@ asynStatus LC400Controller::writeInt32(asynUser *pasynUser, epicsInt32 value)
   }
   else
     status = asynError;
-  
-  skip:
-  if (status) 
-    asynPrint(pasynUser, ASYN_TRACE_ERROR, 
-        "%s:%s: error, status=%d function=%d, value=%d\n", 
-        driverName, functionName, status, function, value);
-  else    
-    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
-        "%s:%s: function=%d, value=%d\n", 
-        driverName, functionName, function, value);
+
   return status;
 }
 
@@ -606,11 +600,11 @@ asynStatus LC400Controller::writeFloat64(asynUser *pasynUser, epicsFloat64 value
   skip:
   if (status) 
     asynPrint(pasynUser, ASYN_TRACE_ERROR, 
-        "%s:%s: error, status=%d function=%d, value=%d\n", 
+        "%s:%s: error, status=%d function=%d, value=%f\n", 
         driverName, functionName, status, function, value);
   else    
     asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
-        "%s:%s: function=%d, value=%d\n", 
+        "%s:%s: function=%d, value=%f\n", 
         driverName, functionName, function, value);
   return status;
 }
@@ -798,8 +792,8 @@ asynStatus LC400Axis::moveVelocity(epicsFloat64 min_velocity, epicsFloat64 max_v
   epicsInt32 lowLimit;
 
   //get limit status
-  if (status = pC_->getIntegerParam(pC_->motorStatusHighLimit_,&highLimit))  goto skip;
-  if (status = pC_->getIntegerParam(pC_->motorStatusLowLimit_,&lowLimit))  goto skip;
+  if ((status = pC_->getIntegerParam(pC_->motorStatusHighLimit_,&highLimit)))  goto skip;
+  if ((status = pC_->getIntegerParam(pC_->motorStatusLowLimit_,&lowLimit)))  goto skip;
   if (max_velocity > 0 && highLimit)
   {
     //printf("already at high limit, ignoring command\n");
@@ -907,7 +901,7 @@ void LC400Axis::setHardLimits(epicsFloat64 posHardLimit, epicsFloat64 negHardLim
   this->posHardLimit=this->getCts(posHardLimit);
   this->negHardLimit=this->getCts(negHardLimit);
   this->tolHardLimit=this->getCts(tolHardLimit);
-  printf("hardLimits pos,neg,tol = %f,%f,%f\n",this->posHardLimit,this->negHardLimit,this->tolHardLimit);
+  printf("hardLimits pos,neg,tol = %d,%d,%d\n",this->posHardLimit,this->negHardLimit,this->tolHardLimit);
 }
 
 extern "C" int LC400ConfigAxis(const char *portName, int axis, epicsFloat64 hiHardLimit, epicsFloat64 lowHardLimit, epicsFloat64 tolHardLimit)
