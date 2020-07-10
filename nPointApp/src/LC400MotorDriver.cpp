@@ -13,7 +13,9 @@ August, 2019
 #include <math.h>
 #include <stdint.h>
 #include <assert.h>
+# ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <sys/time.h>
 #include <sstream>
 #include <map>
