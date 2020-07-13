@@ -280,12 +280,14 @@ asynStatus LC400Controller::readSingle(epicsUInt32 addr, epicsInt32 *val)
 {
   asynStatus status = asynSuccess;
 
+  /* Pack these structures on 1-byte boundaries */
+  #pragma pack(1)
 
   struct outData {
       unsigned char cmd;
       epicsUInt32 offset;
       unsigned char eos;
-  } __attribute__((__packed__));
+  };
 
 
   struct inData {
@@ -293,7 +295,10 @@ asynStatus LC400Controller::readSingle(epicsUInt32 addr, epicsInt32 *val)
       epicsUInt32 offset;
       epicsInt32 response;
       unsigned char eos;
-  } __attribute__((__packed__));
+  };
+  
+  /* Revert to previous packing */
+  #pragma pack()
 
   struct outData out;
   out.cmd=0xA0;
@@ -326,13 +331,18 @@ asynStatus LC400Controller::readSingle(epicsUInt32 addr, epicsInt32 *val)
 asynStatus LC400Controller::writeSingle(epicsUInt32 addr,epicsInt32 value)
 {
   asynStatus status;
-
-  struct __attribute__((__packed__))outData{
+  
+  /* Pack these structures on 1-byte boundaries */
+  #pragma pack(1)
+  struct outData {
       unsigned char cmd;
       epicsUInt32 offset;
       epicsInt32 value;
       unsigned char eos;
   };
+
+  /* Revert to previous packing */
+  #pragma pack()
 
   struct outData out;
   out.cmd=0xA2;
@@ -358,11 +368,18 @@ asynStatus LC400Controller::writeArray(epicsUInt32 addr, epicsInt32* array, size
 {
   asynStatus status;
 
-  struct __attribute__((__packed__))outData{
+  /* Pack these structures on 1-byte boundaries */
+  #pragma pack(1)
+
+  struct outData {
     unsigned char cmd;
     epicsInt32 value;
     unsigned char eos;
   };
+
+  /* Revert to previous packing */
+  #pragma pack()
+
   struct outData out;
   out.cmd=0xA3;
   size_t nwrite;
@@ -400,17 +417,23 @@ asynStatus LC400Controller::readArray(epicsUInt32 addr, epicsUInt32 numReads, ep
   assert(numReads*4 == bufSize);
   asynStatus status = asynSuccess;
 
-  struct __attribute__((__packed__))outData{
+  /* Pack these structures on 1-byte boundaries */
+  #pragma pack(1)
+
+  struct outData {
     unsigned char cmd;
     epicsUInt32 offset;
     epicsUInt32 numReads;
     unsigned char eos;
   };
 
-  struct __attribute__((__packed__))inData{
+  struct inData {
     unsigned char cmd;
     epicsUInt32 offset;
   };
+
+  /* Revert to previous packing */
+  #pragma pack()
 
   struct outData out;
   out.cmd=0xA4;
