@@ -11,9 +11,9 @@
 #FTDI driver
 drvAsynFTDIPortConfigure("LC400ftdi", "0x403", "0x6014","3000000", "2", "0", "0", "1")
 
-dbLoadRecords("auxParameters.db","PORT=LC400,ADDR=0,P=nPoint:,R=LC400:")
-dbLoadRecords("auxParameters.db","PORT=LC400,ADDR=1,P=nPoint:,R=LC400:")
-dbLoadRecords("auxParameters.db","PORT=LC400,ADDR=2,P=nPoint:,R=LC400:")
+dbLoadRecords("$(TOP)/db/LC400_auxParameters.db","PORT=LC400,ADDR=0,P=nPoint:,R=LC400:")
+dbLoadRecords("$(TOP)/db/LC400_auxParameters.db","PORT=LC400,ADDR=1,P=nPoint:,R=LC400:")
+dbLoadRecords("$(TOP)/db/LC400_auxParameters.db","PORT=LC400,ADDR=2,P=nPoint:,R=LC400:")
 
 dbLoadTemplate("LC400.substitutions")
 
