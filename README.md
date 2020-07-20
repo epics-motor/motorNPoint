@@ -1,5 +1,5 @@
 # motorNPoint
-EPICS motor drivers for the following [nPoint](https://www.npoint.com/) controllers: C300 piezo controller
+EPICS motor drivers for the following [nPoint](https://www.npoint.com/) controllers: C300 and LC400 piezo controllers
 
 [![Build Status](https://travis-ci.org/epics-motor/motorNPoint.png)](https://travis-ci.org/epics-motor/motorNPoint)
 
