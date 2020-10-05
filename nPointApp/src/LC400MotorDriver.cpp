@@ -268,7 +268,15 @@ static void genTrapezoid(epicsFloat64 ipos, epicsFloat64 fpos, epicsFloat64 vel,
         }
     }
 
-    result->cycle_count = cycle_count;
+    // We must subtract cycle_count by 1 before writing its value to the
+    // WAV_DELAY register because the delay per cycle is actually:
+    //    (1 + WAV_DELAY)*LC400_MIN_DELAY seconds
+    if (!cycle_count) {
+        fprintf(stderr, "Cycle Count was calculated to be 0, which shouldn't happen. Setting it to 1\n");
+        ++cycle_count;
+    }
+
+    result->cycle_count = cycle_count - 1;
     result->data_len = npts;
 }
 
