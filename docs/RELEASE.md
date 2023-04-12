@@ -1,5 +1,23 @@
 # motorNPoint Releases
 
+## __R1-1 (2023-04-12)__
+R1-1 is a release based on the master branch.
+
+### Changes since R1-0-1
+
+#### New features
+* Pull request [#1](https://github.com/epics-motor/motorNPoint/pull/1): [Diego Omitto](https://github.com/domitto) added support for the nPoint LC400 controller
+
+#### Modifications to existing features
+* None
+
+#### Bug fixes
+* Pull request [#3](https://github.com/epics-motor/motorNPoint/pull/3): [Diego Omitto](https://github.com/domitto) fixed an off-by-one error on WAV_DELAY when calculating velocity
+
+#### Continuous integration
+* Added ci-scripts (v3.0.1)
+* Configured to use Github Actions for CI
+
 ## __R1-0-1 (2020-05-11)__
 R1-0-1 is a release based on the master branch.  
 
